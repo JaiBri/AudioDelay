@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 260" width="900" height="260" role="img" aria-label="Signal flow: system audio goes into BlackHole, AudioDelay buffers it, then plays it to your speakers">
+  <defs>
+    <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#5C4DE6"/>
+      <stop offset="100%" stop-color="#2A8CF0"/>
+    </linearGradient>
+    <linearGradient id="g2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2A8CF0"/>
+      <stop offset="100%" stop-color="#19C2DB"/>
+    </linearGradient>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8A93A6"/>
+    </marker>
+  </defs>
+
+  <rect x="24" y="70" width="180" height="86" rx="16" fill="#6E7A8F"/>
+  <text x="114" y="105" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="17" font-weight="600" fill="#ffffff">macOS audio</text>
+  <text x="114" y="128" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="13" fill="#E4E8F0">music, video, games</text>
+
+  <line x1="212" y1="113" x2="256" y2="113" stroke="#8A93A6" stroke-width="2.5" marker-end="url(#arrow)"/>
+
+  <rect x="264" y="70" width="170" height="86" rx="16" fill="url(#g1)"/>
+  <text x="349" y="105" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="17" font-weight="600" fill="#ffffff">BlackHole</text>
+  <text x="349" y="128" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="13" fill="#DDE4FF">virtual loopback</text>
+
+  <line x1="442" y1="113" x2="486" y2="113" stroke="#8A93A6" stroke-width="2.5" marker-end="url(#arrow)"/>
+
+  <rect x="494" y="52" width="196" height="122" rx="16" fill="url(#g2)"/>
+  <text x="592" y="86" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="17" font-weight="600" fill="#ffffff">AudioDelay</text>
+  <text x="592" y="110" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="13" fill="#E6FBFF">ring buffer · 0–5 s</text>
+  <text x="592" y="132" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="13" fill="#E6FBFF">drift compensation</text>
+  <text x="592" y="154" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="13" fill="#E6FBFF">48 kHz stereo</text>
+
+  <line x1="698" y1="113" x2="742" y2="113" stroke="#8A93A6" stroke-width="2.5" marker-end="url(#arrow)"/>
+
+  <rect x="750" y="70" width="126" height="86" rx="16" fill="#6E7A8F"/>
+  <text x="813" y="105" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="17" font-weight="600" fill="#ffffff">Your output</text>
+  <text x="813" y="128" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="13" fill="#E4E8F0">any device</text>
+
+  <path d="M 114 178 L 114 216 L 813 216 L 813 178" fill="none" stroke="#9AA3B2" stroke-width="2.5" stroke-dasharray="7 6" marker-end="url(#arrow)"/>
+  <rect x="386" y="200" width="216" height="32" rx="10" fill="#9AA3B2"/>
+  <text x="494" y="222" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="13" font-weight="600" fill="#ffffff">Delay off — direct, untouched</text>
+
+  <text x="450" y="30" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="14" fill="#8A93A6">AudioDelay switches your output device automatically — one click, no System Settings</text>
+</svg>
