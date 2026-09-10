@@ -404,13 +404,7 @@ final class AudioDelayEngine: ObservableObject {
         debugLog("system output -> \(systemOutputName) (\(newDefaultUID)) verdict=\(verdict)")
         switch verdict {
         case .reassertBlackHole:
-            if let blackHoleID = CoreAudioDevices.deviceID(forUID: blackHoleUID),
-               (try? CoreAudioDevices.setDefaultOutputDevice(blackHoleID)) != nil {
-                refreshSystemOutput()
-                reconcileOutputs()
-                return
-            }
-            fallthrough
+            reassertBlackHoleRoute(attempt: 1)
         case .userBypass:
             isDelayEnabled = false
             persistDelayEnabled(false)
@@ -420,6 +414,26 @@ final class AudioDelayEngine: ObservableObject {
             refreshSystemOutput()
             publishStatuses()
         }
+    }
+
+    // macOS can re-apply its own switch to a reconnecting speaker moments after ours,
+    // so a write that does not stick is retried rather than treated as a bypass.
+    private var reassertWork: DispatchWorkItem?
+    private func reassertBlackHoleRoute(attempt: Int) {
+        reassertWork?.cancel()
+        guard isDelayEnabled, captureRunning,
+              let blackHoleID = CoreAudioDevices.deviceID(forUID: blackHoleUID) else { return }
+        let succeeded = (try? CoreAudioDevices.setDefaultOutputDevice(blackHoleID)) != nil
+        refreshSystemOutput()
+        debugLog("reassert BlackHole attempt \(attempt): \(succeeded ? "ok" : "failed")")
+        if succeeded {
+            reconcileOutputs()
+            return
+        }
+        guard attempt < 5 else { return }
+        let work = DispatchWorkItem { [weak self] in self?.reassertBlackHoleRoute(attempt: attempt + 1) }
+        reassertWork = work
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500), execute: work)
     }
 
     // Device add/remove. The listener fires several times while a Bluetooth speaker

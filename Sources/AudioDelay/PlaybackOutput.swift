@@ -293,10 +293,19 @@ final class PlaybackOutput {
         // AVAudioSourceNode converts sample rate but not channel count, so the render
         // block must speak the device's channel count. Connecting with anything other
         // than the device's exact format is an uncatchable NSException, not an error.
-        let outputFormat = engine.outputNode.inputFormat(forBus: 0)
-        guard outputFormat.sampleRate > 0, outputFormat.channelCount >= 1,
+        // After pinning, the unit's client side keeps the rate it was created with (the
+        // system default's, i.e. BlackHole's) while its device side follows the new
+        // device. Feeding a 44.1 kHz Bluetooth speaker at a 48 kHz client rate produced
+        // silence, so the connection format takes the device's rate from the node's
+        // output side and the channel count from its input side.
+        let nodeInput = engine.outputNode.inputFormat(forBus: 0)
+        let deviceRate = engine.outputNode.outputFormat(forBus: 0).sampleRate
+        let connectRate = deviceRate > 0 ? deviceRate : nodeInput.sampleRate
+        guard connectRate > 0, nodeInput.channelCount >= 1,
+              let outputFormat = AVAudioFormat(standardFormatWithSampleRate: connectRate,
+                                               channels: nodeInput.channelCount),
               let sourceFormat = AVAudioFormat(standardFormatWithSampleRate: ring.sampleRate,
-                                               channels: outputFormat.channelCount) else {
+                                               channels: nodeInput.channelCount) else {
             return .failure(.noUsableFormat(device.name))
         }
 
